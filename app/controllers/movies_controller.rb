@@ -12,7 +12,10 @@ class MoviesController < ApplicationController
     session[:ratings] = params[:ratings] || all_hash
     @selected_ratings = selected_ratings
     @selected_ratings_hash = selected_ratings_hash
-    @movies = Movie.filter_by_ratings(@selected_ratings)
+    @sort = sort
+    determined_hilighting
+    @movies = Movie.filter_and_sort(@selected_ratings, @sort)
+    p @movies
   end
 
   def new
@@ -61,4 +64,14 @@ class MoviesController < ApplicationController
   def selected_ratings_hash
     session[:ratings]
   end
+  
+  def sort
+    params[:sort] || "id"
+  end
+  
+  def determined_hilighting
+    @header_hilite = {:title=>"", :release_date=>"", :id=>""}
+    @header_hilite[@sort]="bg-warning hilite"
+  end
+  
 end
